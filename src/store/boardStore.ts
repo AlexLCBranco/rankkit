@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
-import { addCard, deleteCard, moveCard, setCardText } from "../domain/board";
+import { addCard, deleteCard, moveCard, setCardText, setLabel } from "../domain/board";
 import { createCardId } from "../domain/ids";
 import { sampleBoard } from "../domain/sample";
-import type { BoardDoc, BoardState, CardId, Point } from "../domain/types";
+import type { BoardDoc, BoardState, CardId, LabelKey, Point } from "../domain/types";
 
 /**
  * The open board: the single source of truth for cards and their places.
@@ -20,6 +20,8 @@ interface BoardStore {
   setCardText(id: CardId, text: string): void;
   moveCard(id: CardId, pos: Point | null): void;
   deleteCard(id: CardId): void;
+  /** Renames an axis or a quadrant; blank text restores the default. */
+  setLabel(key: LabelKey, text: string): void;
 }
 
 export const useBoardStore = create<BoardStore>()((set) => {
@@ -39,6 +41,7 @@ export const useBoardStore = create<BoardStore>()((set) => {
     setCardText: (id, text) => apply((s) => setCardText(s, id, text)),
     moveCard: (id, pos) => apply((s) => moveCard(s, id, pos)),
     deleteCard: (id) => apply((s) => deleteCard(s, id)),
+    setLabel: (key, text) => apply((s) => setLabel(s, key, text)),
   };
 });
 

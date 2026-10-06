@@ -1,6 +1,6 @@
 # Rankkit — project summary
 
-_Last updated: 2026-10-05, v0.0.1_
+_Last updated: 2026-10-05, v0.0.2_
 
 ## What it is
 
@@ -42,6 +42,9 @@ sample board. No backend.
   follows the pointer. Dropping outside the matrix and the strip puts the
   card back where it was.
 - **Dark theme by default**, like the other widgets.
+- **Renaming labels.** Double-click an axis label or a quadrant name to
+  rename it, the same gesture as a card. No settings panel. Clearing a name
+  brings the default word back, so a heading is never blank.
 
 ## What works now (step 1: the core)
 
@@ -56,6 +59,12 @@ sample board. No backend.
   Hovering a row highlights its card on the matrix.
 - Sample board "My week" on every load.
 
+## What works now (step 2: editable labels)
+
+- Double-click either axis label or any quadrant name, type, Enter (Esc
+  cancels). The buckets panel follows the new names at once. A soft hover
+  background hints that a label can be renamed.
+
 ## Open problems
 
 - Nothing is saved yet: a reload brings the sample board back.
@@ -67,7 +76,6 @@ sample board. No backend.
 Each line is one step, done in its own chat, in this order. Step numbers
 never change (step 1 was the core), so "step 3" always means the same thing.
 
-- **Step 2.** Editable axis labels and quadrant names.
 - **Step 3.** Undo / redo (Ctrl+Z, Ctrl+Shift+Z and buttons).
 - **Step 4.** Card colours (optional, same palette as the other widgets).
 - **Step 5.** Several saved boards with a board menu, saved in localStorage.

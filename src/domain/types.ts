@@ -25,6 +25,9 @@ export type PaletteColor = (typeof PALETTE_COLORS)[number];
 export const QUADRANTS = ["tl", "tr", "bl", "br"] as const;
 export type Quadrant = (typeof QUADRANTS)[number];
 
+/** Every renamable word on the board: the two axes and the four quadrants. */
+export type LabelKey = "x" | "y" | Quadrant;
+
 export interface Point {
   readonly x: number;
   readonly y: number;

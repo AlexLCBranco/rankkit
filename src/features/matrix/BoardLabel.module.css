@@ -1,0 +1,19 @@
+/* A renamable word: a soft rounded hover hint says "this can change"
+   without adding any visible button. */
+.label {
+  display: inline-block;
+  max-width: 100%;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-sm);
+  cursor: text;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+
+.label:hover,
+.label[data-editing] {
+  background: var(--surface-hover);
+}
+
+.label[data-editing] {
+  outline: 1px solid var(--accent);
+}

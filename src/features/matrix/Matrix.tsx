@@ -3,6 +3,7 @@ import { useShallow } from "zustand/react/shallow";
 import { QUADRANTS } from "../../domain/types";
 import { useBoardStore } from "../../store/boardStore";
 import { useViewStore } from "../../store/viewStore";
+import { BoardLabel } from "./BoardLabel";
 import { registerMatrix } from "./cardDrag";
 import { CardView } from "./CardView";
 import styles from "./Matrix.module.css";
@@ -11,20 +12,21 @@ import styles from "./Matrix.module.css";
  * The 2×2 board: four quadrants, dashed centre lines, the two axis labels
  * and every placed card. Cards are absolutely positioned at their points
  * (plain CSS, no canvas library): the page never pans or zooms, so React
- * Flow's camera, edges and handles would all go unused.
+ * Flow's camera, edges and handles would all go unused. Every label on it
+ * can be renamed with a double-click (`BoardLabel`).
  */
 export function Matrix() {
   const placedIds = useBoardStore(
     useShallow((s) => s.doc.state.order.filter((id) => s.doc.state.cards[id]?.pos)),
   );
-  const axes = useBoardStore((s) => s.doc.state.axes);
-  const names = useBoardStore((s) => s.doc.state.quadrantNames);
   const best = useBoardStore((s) => s.doc.state.best);
 
   return (
     <div className={styles.frame}>
       <div className={styles.yAxis}>
-        <span>{axes.y} →</span>
+        <span className={styles.yAxisText}>
+          <BoardLabel labelKey="y" /> →
+        </span>
       </div>
       <div
         ref={registerMatrix}
@@ -33,7 +35,7 @@ export function Matrix() {
       >
         {QUADRANTS.map((q) => (
           <div key={q} className={styles.quadrant} data-q={q} data-best={q === best ? "" : undefined}>
-            <span className={styles.quadrantName}>{names[q]}</span>
+            <BoardLabel labelKey={q} className={styles.quadrantName} />
           </div>
         ))}
         <div className={styles.vLine} />
@@ -42,7 +44,9 @@ export function Matrix() {
           <CardView key={id} id={id} />
         ))}
       </div>
-      <div className={styles.xAxis}>{axes.x} →</div>
+      <div className={styles.xAxis}>
+        <BoardLabel labelKey="x" /> →
+      </div>
     </div>
   );
 }

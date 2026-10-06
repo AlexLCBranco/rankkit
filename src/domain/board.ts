@@ -1,4 +1,4 @@
-import type { BoardState, CardId, Point } from "./types";
+import type { BoardState, CardId, LabelKey, Point } from "./types";
 
 /**
  * Card operations, as pure functions from one state to the next. Each one
@@ -46,4 +46,20 @@ export function deleteCard(state: BoardState, id: CardId): BoardState {
   const cards = { ...state.cards };
   delete cards[id];
   return { ...state, cards, order: state.order.filter((c) => c !== id) };
+}
+
+/** The current word for an axis or a quadrant. */
+export function labelOf(state: Pick<BoardState, "axes" | "quadrantNames">, key: LabelKey): string {
+  return key === "x" || key === "y" ? state.axes[key] : state.quadrantNames[key];
+}
+
+/**
+ * Renames an axis or a quadrant. Blank text brings the default word back,
+ * so the board never shows an empty heading.
+ */
+export function setLabel(state: BoardState, key: LabelKey, text: string): BoardState {
+  const next = text.trim() || labelOf(DEFAULT_BOARD, key);
+  if (next === labelOf(state, key)) return state;
+  if (key === "x" || key === "y") return { ...state, axes: { ...state.axes, [key]: next } };
+  return { ...state, quadrantNames: { ...state.quadrantNames, [key]: next } };
 }

@@ -75,7 +75,7 @@
   justify-content: center;
 }
 
-.yAxis span {
+.yAxisText {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   color: var(--text-secondary);

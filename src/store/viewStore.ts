@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import type { CardId } from "../domain/types";
+import type { CardId, LabelKey } from "../domain/types";
 
 /**
  * What the screen is doing right now, as opposed to what the board holds:
@@ -18,11 +18,14 @@ export interface DragState {
 interface ViewStore {
   readonly selectedId: CardId | null;
   readonly editingId: CardId | null;
+  /** The axis label or quadrant name being renamed. */
+  readonly editingLabel: LabelKey | null;
   /** A card hovered in the buckets panel, highlighted on the matrix. */
   readonly hoveredId: CardId | null;
   readonly drag: DragState | null;
   select(id: CardId | null): void;
   edit(id: CardId | null): void;
+  editLabel(key: LabelKey | null): void;
   hover(id: CardId | null): void;
   setDrag(drag: DragState | null): void;
 }
@@ -30,10 +33,12 @@ interface ViewStore {
 export const useViewStore = create<ViewStore>()((set) => ({
   selectedId: null,
   editingId: null,
+  editingLabel: null,
   hoveredId: null,
   drag: null,
   select: (selectedId) => set({ selectedId }),
   edit: (editingId) => set(editingId ? { editingId, selectedId: editingId } : { editingId }),
+  editLabel: (editingLabel) => set({ editingLabel }),
   hover: (hoveredId) => set({ hoveredId }),
   setDrag: (drag) => set({ drag }),
 }));

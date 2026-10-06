@@ -1,4 +1,4 @@
-import type { BoardState, CardId, LabelKey, Point } from "./types";
+import type { BoardState, CardId, LabelKey, PaletteColor, Point } from "./types";
 
 /**
  * Card operations, as pure functions from one state to the next. Each one
@@ -30,6 +30,13 @@ export function setCardText(state: BoardState, id: CardId, text: string): BoardS
   const card = state.cards[id];
   if (!card || card.text === text) return state;
   return { ...state, cards: { ...state.cards, [id]: { ...card, text } } };
+}
+
+/** `color: null` takes the colour off again. */
+export function setCardColor(state: BoardState, id: CardId, color: PaletteColor | null): BoardState {
+  const card = state.cards[id];
+  if (!card || card.color === color) return state;
+  return { ...state, cards: { ...state.cards, [id]: { ...card, color } } };
 }
 
 /** `pos: null` sends the card back to the unsorted strip. */

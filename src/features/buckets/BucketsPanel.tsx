@@ -38,6 +38,9 @@ export function BucketsPanel() {
                   onPointerLeave={() => hover(null)}
                   onClick={() => select(card.id)}
                 >
+                  {card.color && (
+                    <span className={styles.dot} style={{ background: `var(--palette-${card.color})` }} aria-hidden />
+                  )}
                   <span className={styles.text}>{card.text || "New card"}</span>
                 </li>
               ))}

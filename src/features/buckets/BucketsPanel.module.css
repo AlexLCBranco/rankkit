@@ -59,6 +59,16 @@
   background: var(--surface-active);
 }
 
+/* A coloured card's colour, as a dot before its text. */
+.dot {
+  display: inline-block;
+  width: var(--color-dot-size);
+  height: var(--color-dot-size);
+  margin-right: var(--space-2);
+  border-radius: var(--radius-full);
+  vertical-align: middle;
+}
+
 .text {
   overflow-wrap: anywhere;
 }

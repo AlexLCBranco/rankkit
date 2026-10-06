@@ -1,6 +1,6 @@
 # Rankkit — project summary
 
-_Last updated: 2026-10-05, v0.0.3_
+_Last updated: 2026-10-05, v0.0.4_
 
 ## What it is
 
@@ -14,8 +14,8 @@ every push to main deploys on Vercel (rankkit-nine.vercel.app).
 
 ## Stack
 
-Vite, React 19, TypeScript, Zustand, Tailwind v4 + shadcn/ui (for menus and
-dialogs, coming in step 2), CSS Modules with design tokens copied from
+Vite, React 19, TypeScript, Zustand, Tailwind v4 + shadcn/ui (only for menus and
+dialogs, such as the card menu), CSS Modules with design tokens copied from
 Treekit, lucide icons. Same layering as Treekit:
 `app -> features -> store -> domain`. `domain/` is plain TypeScript with
 Vitest tests. It holds the card operations, quadrants, the ranking and the
@@ -48,6 +48,10 @@ sample board. No backend.
 - **Undo stores patches, not copies.** Each change keeps only the parts
   of the board it replaced (`domain/history.ts`, the same design as
   Treekit). The history lives for the session only and is never saved.
+- **Colours live in a right-click menu.** The same eight colours and words
+  as Boardkit and Treekit. No number keys for colours (unlike Treekit):
+  Rankkit keeps the keyboard for typing text. A colour is only a tag; it
+  never changes where a card ranks.
 
 ## What works now (step 1: the core)
 
@@ -78,6 +82,14 @@ sample board. No backend.
   pointer move), adding a card and typing its text is one step, and a new
   card abandoned empty leaves no step at all.
 
+## What works now (step 4: card colours)
+
+- Right-click a card for its menu: None or one of eight colours (slate,
+  red, orange, yellow, green, teal, blue, purple), and Delete card. A
+  coloured card gets a soft tint and a border in its colour; the buckets
+  panel shows a matching dot beside it. Each colour change is one undo
+  step.
+
 ## Open problems
 
 - Nothing is saved yet: a reload brings the sample board back.
@@ -89,7 +101,6 @@ sample board. No backend.
 Each line is one step, done in its own chat, in this order. Step numbers
 never change (step 1 was the core), so "step 3" always means the same thing.
 
-- **Step 4.** Card colours (optional, same palette as the other widgets).
 - **Step 5.** Several saved boards with a board menu, saved in localStorage.
 - **Step 6.** "This or that": compare two close cards in the same bucket.
 

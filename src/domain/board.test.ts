@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { addCard, deleteCard, emptyBoard, labelOf, moveCard, setCardText, setLabel } from "./board";
+import { addCard, deleteCard, emptyBoard, labelOf, moveCard, setCardColor, setCardText, setLabel } from "./board";
 import { asCardId } from "./ids";
 
 const A = asCardId("a");
@@ -24,6 +24,16 @@ describe("card operations", () => {
     const gone = deleteCard(moved, A);
     expect(gone.cards).toEqual({});
     expect(gone.order).toEqual([]);
+  });
+
+  it("colours a card and takes the colour off again", () => {
+    const start = addCard(emptyBoard(), A, "Hello");
+    const red = setCardColor(start, A, "red");
+    expect(red.cards[A].color).toBe("red");
+    expect(red.order).toBe(start.order);
+    expect(setCardColor(red, A, "red")).toBe(red);
+    expect(setCardColor(red, A, null).cards[A].color).toBeNull();
+    expect(setCardColor(start, asCardId("missing"), "blue")).toBe(start);
   });
 });
 

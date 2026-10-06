@@ -17,6 +17,14 @@
     transform var(--duration-fast) var(--ease-standard);
 }
 
+/* A coloured card: a tint of its colour over the surface, with a solid
+   border in that colour, like a coloured Treekit node. `color-mix` keeps
+   the text readable in both themes. */
+.card[data-colored] {
+  border-color: var(--card-accent);
+  background: color-mix(in srgb, var(--card-accent) var(--palette-tint), var(--surface-raised));
+}
+
 /* On the matrix: the centre sits on the card's point. */
 .card[data-placed] {
   position: absolute;

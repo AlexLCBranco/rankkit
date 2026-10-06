@@ -1,10 +1,10 @@
 import { create } from "zustand";
 
-import { addCard, deleteCard, moveCard, setCardText, setLabel } from "../domain/board";
+import { addCard, deleteCard, moveCard, setCardColor, setCardText, setLabel } from "../domain/board";
 import * as history from "../domain/history";
 import { createCardId } from "../domain/ids";
 import { sampleBoard } from "../domain/sample";
-import type { BoardDoc, BoardState, CardId, LabelKey, Point } from "../domain/types";
+import type { BoardDoc, BoardState, CardId, LabelKey, PaletteColor, Point } from "../domain/types";
 import { useViewStore } from "./viewStore";
 
 /**
@@ -30,6 +30,8 @@ interface BoardStore {
   addCard(): CardId;
   setCardText(id: CardId, text: string): void;
   moveCard(id: CardId, pos: Point | null): void;
+  /** `null` takes the colour off. */
+  setCardColor(id: CardId, color: PaletteColor | null): void;
   deleteCard(id: CardId): void;
   /** Renames an axis or a quadrant; blank text restores the default. */
   setLabel(key: LabelKey, text: string): void;
@@ -85,6 +87,7 @@ export const useBoardStore = create<BoardStore>()((set, get) => {
     },
     setCardText: (id, text) => apply((s) => setCardText(s, id, text), get().newCardId === id),
     moveCard: (id, pos) => apply((s) => moveCard(s, id, pos)),
+    setCardColor: (id, color) => apply((s) => setCardColor(s, id, color)),
     deleteCard(id) {
       const s = get();
       if (s.newCardId === id && !s.gestureStart && !s.doc.state.cards[id]?.text) {

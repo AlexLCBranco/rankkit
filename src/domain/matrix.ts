@@ -83,3 +83,28 @@ export function clampToBoard(p: Point, margin: Point = { x: 0, y: 0 }): Point {
   const clamp = (v: number, m: number) => Math.min(1 - m, Math.max(m, v));
   return { x: clamp(p.x, Math.min(margin.x, 0.5)), y: clamp(p.y, Math.min(margin.y, 0.5)) };
 }
+
+export interface RankedCard {
+  readonly card: Card;
+  /** `null` while the card is still unsorted. */
+  readonly quadrant: Quadrant | null;
+  /** The bucket's name, or "Unsorted". */
+  readonly bucket: string;
+  /** 1-based place inside its bucket; `null` when unsorted. */
+  readonly place: number | null;
+}
+
+/**
+ * The whole board as one priority order: every bucket's list one after
+ * another, best bucket first, then the unsorted cards in the order they
+ * were added. The List and Table views read this.
+ */
+export function rankingOf(state: BoardState): readonly RankedCard[] {
+  const { buckets, unsorted } = bucketsOf(state);
+  return [
+    ...buckets.flatMap((b) =>
+      b.cards.map((card, i) => ({ card, quadrant: b.quadrant, bucket: b.name, place: i + 1 })),
+    ),
+    ...unsorted.map((card) => ({ card, quadrant: null, bucket: "Unsorted", place: null })),
+  ];
+}

@@ -23,7 +23,24 @@ export interface MarqueeBox {
   readonly height: number;
 }
 
+/** Which picture of the board is on screen. All three read the same board. */
+export const VIEW_MODES = ["matrix", "list", "table"] as const;
+export type ViewMode = (typeof VIEW_MODES)[number];
+
+/** Remembered per browser, like Vennkit's view; never part of a board. */
+const MODE_KEY = "rankkit:view";
+
+function loadMode(): ViewMode {
+  try {
+    const saved = localStorage.getItem(MODE_KEY);
+    return VIEW_MODES.find((m) => m === saved) ?? "matrix";
+  } catch {
+    return "matrix";
+  }
+}
+
 interface ViewStore {
+  readonly mode: ViewMode;
   /** The last card picked: what Delete and the card menu act on alone. */
   readonly selectedId: CardId | null;
   /** Every picked card (one, or a group from the marquee or Shift+click),
@@ -36,6 +53,7 @@ interface ViewStore {
   readonly hoveredId: CardId | null;
   readonly drag: DragState | null;
   readonly marquee: MarqueeBox | null;
+  setMode(mode: ViewMode): void;
   select(id: CardId | null): void;
   /** Picks a whole group at once. */
   selectMany(ids: readonly CardId[]): void;
@@ -47,6 +65,7 @@ interface ViewStore {
 }
 
 export const useViewStore = create<ViewStore>()((set) => ({
+  mode: loadMode(),
   selectedId: null,
   selectedIds: [],
   editingId: null,
@@ -54,6 +73,14 @@ export const useViewStore = create<ViewStore>()((set) => ({
   hoveredId: null,
   drag: null,
   marquee: null,
+  setMode: (mode) => {
+    try {
+      localStorage.setItem(MODE_KEY, mode);
+    } catch {
+      // Private windows may refuse; the choice just isn't remembered.
+    }
+    set({ mode, editingId: null, editingLabel: null, hoveredId: null, marquee: null });
+  },
   select: (id) => set({ selectedId: id, selectedIds: id ? [id] : [] }),
   selectMany: (ids) => set({ selectedId: ids.at(-1) ?? null, selectedIds: ids }),
   edit: (editingId) =>

@@ -1,6 +1,6 @@
 # Rankkit — project summary
 
-_Last updated: 2026-10-05, v0.0.9_
+_Last updated: 2026-10-05, v0.0.10_
 
 ## What it is
 
@@ -19,7 +19,7 @@ dialogs, such as the card menu), CSS Modules with design tokens copied from
 Treekit, lucide icons. Same layering as Treekit:
 `app -> features -> store -> domain`. `domain/` is plain TypeScript with
 Vitest tests. It holds the card operations, quadrants, the ranking and the
-sample board, the "this or that" close calls, the arrange presets, what the marquee picks, and how a saved board is read back (and repaired). No
+sample board, the "this or that" close calls, the arrange presets, what the marquee picks, the one-list ranking the List and Table views show, and how a saved board is read back (and repaired). No
 backend: boards live in the browser's localStorage.
 
 ## Decisions
@@ -84,6 +84,13 @@ backend: boards live in the browser's localStorage.
   among themselves. Cards of the group still in the unsorted strip stay
   there. The bar's count is in words ("Two cards"), like the panel's. No
   Ctrl+A: Rankkit keeps the keyboard for typing text.
+- **Three views, one board (like Vennkit).** Matrix, List and Table all
+  read the same board, so nothing new is stored and undo, saving and
+  colours just work. List and Table are for reading the answer; moving
+  cards stays on the matrix. The switcher sits in the middle of the
+  header, not bottom-left as in Vennkit, because that corner holds the
+  unsorted strip. The chosen view is remembered per browser
+  (`rankkit:view`), not per board.
 
 ## What works now (step 1: the core)
 
@@ -172,6 +179,20 @@ widgets, so it took the next step number.
 - `.claude/launch.json` has a second dev server, `rankkit-2` on port
   5184, for when another chat already runs `rankkit` on 5183.
 
+## What works now (step 9: views)
+
+Asked for by the owner ("the different view option, like on Vennkit"),
+so it took the next step number.
+
+- A Matrix / List / Table switcher in the header, with a highlight that
+  slides to the view on screen.
+- List: the whole board as one numbered priority order (Do now's cards,
+  then Schedule's, Delegate's, Drop's), each row naming its bucket. The
+  unsorted cards sit underneath, unnumbered.
+- Table: one row per card in that same order, with its bucket, its place
+  in the bucket and its colour in a word. Unsorted cards come last.
+- Clicking a row picks the card, so Delete and undo work there too.
+
 ## Open problems
 
 - Boards are saved only in this browser; there is no export or sync yet.
@@ -184,7 +205,7 @@ widgets, so it took the next step number.
 Each line is one step, done in its own chat, in this order. Step numbers
 never change (step 1 was the core), so "step 3" always means the same thing.
 
-No numbered steps are planned right now; the next one gets step 9.
+No numbered steps are planned right now; the next one gets step 10.
 
 Planned later, on purpose not in v1 (the model mustn't block them):
 switching axes between several criteria, a low/medium/high word grid with

@@ -1,0 +1,59 @@
+/* Vennkit's view switcher, centred in the header. (Vennkit floats it at
+   the bottom left, but here that corner holds the unsorted strip.) */
+.switcher {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--switcher-gap);
+  padding: var(--switcher-pad);
+  border-radius: var(--radius-lg);
+  background: var(--surface-sunken);
+  box-shadow: 0 0 0 1px var(--border-subtle);
+}
+
+/* One highlight that slides to the chosen word: each step is one button
+   width plus the gap between buttons. */
+.indicator {
+  position: absolute;
+  top: var(--switcher-pad);
+  bottom: var(--switcher-pad);
+  left: var(--switcher-pad);
+  width: calc((100% - 2 * var(--switcher-pad) - 2 * var(--switcher-gap)) / 3);
+  border-radius: var(--radius-md);
+  background: var(--surface-active);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+  transform: translateX(calc(var(--view-index) * (100% + var(--switcher-gap))));
+  transition: transform var(--duration-slide) var(--ease-out);
+}
+
+.option {
+  position: relative;
+  height: var(--icon-button-size);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--weight-medium);
+  transition: color var(--duration-medium) var(--ease-standard);
+}
+
+.option:hover {
+  color: var(--text-secondary);
+}
+
+.option[aria-pressed="true"] {
+  color: var(--text-primary);
+}
+
+/* Narrow windows: no room in the middle, so it sits in the header's row. */
+@media (max-width: 800px) {
+  .switcher {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+  }
+}

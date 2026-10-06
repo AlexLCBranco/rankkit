@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { addCard, emptyBoard } from "./board";
 import { asCardId } from "./ids";
-import { bucketsOf, clampToBoard, quadrantOf, quadrantOrder } from "./matrix";
+import { bucketsOf, clampToBoard, quadrantOf, quadrantOrder, rankingOf } from "./matrix";
 import { sampleBoard } from "./sample";
 
 describe("quadrantOf", () => {
@@ -55,5 +55,23 @@ describe("bucketsOf", () => {
 describe("clampToBoard", () => {
   it("keeps a point inside, a margin in from the edges", () => {
     expect(clampToBoard({ x: -1, y: 2 }, { x: 0.1, y: 0.2 })).toEqual({ x: 0.1, y: 0.8 });
+  });
+});
+
+describe("rankingOf", () => {
+  it("lists every bucket in order, then the unsorted cards", () => {
+    const ranking = rankingOf(sampleBoard().state);
+    expect(ranking.map((r) => [r.bucket, r.place, r.card.text])).toEqual([
+      ["Do now", 1, "Prepare Thursday presentation"],
+      ["Do now", 2, "Pay the electricity bill"],
+      ["Schedule", 1, "Plan team offsite"],
+      ["Schedule", 2, "Renew passport"],
+      ["Delegate", 1, "Book a meeting room"],
+      ["Delegate", 2, "Answer newsletter survey"],
+      ["Drop", 1, "Clean the garage"],
+      ["Unsorted", null, "Fix the leaking sink"],
+      ["Unsorted", null, "Learn Spanish"],
+    ]);
+    expect(ranking.at(-1)?.quadrant).toBeNull();
   });
 });

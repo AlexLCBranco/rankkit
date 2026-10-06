@@ -8,6 +8,9 @@ import { Matrix } from "../features/matrix/Matrix";
 import { UnsortedStrip } from "../features/matrix/UnsortedStrip";
 import { MarqueeArea } from "../features/selection/MarqueeArea";
 import { SelectionBar } from "../features/selection/SelectionBar";
+import { ListView } from "../features/views/ListView";
+import { TableView } from "../features/views/TableView";
+import { ViewSwitcher } from "../features/views/ViewSwitcher";
 import { useBoardStore } from "../store/boardStore";
 import { useViewStore } from "../store/viewStore";
 import styles from "./App.module.css";
@@ -15,28 +18,37 @@ import { VersionBadge } from "./VersionBadge";
 
 /**
  * One fixed page: header, then the matrix with the unsorted strip under it
- * on the left and the buckets panel on the right.
+ * on the left and the buckets panel on the right. The header's switcher
+ * swaps that for the List or Table view, which fill the space alone.
  */
 export function App() {
   useBoardKeys();
+  const mode = useViewStore((s) => s.mode);
 
   return (
     <div className={styles.app}>
       <header className={styles.header}>
         <span className={styles.appName}>{__APP_NAME__}</span>
         <BoardSwitcher />
+        <ViewSwitcher />
         <HistoryButtons />
       </header>
-      <main className={styles.main}>
-        <MarqueeArea className={styles.board}>
-          <div className={styles.matrixArea}>
-            <Matrix />
-            <SelectionBar />
-          </div>
-          <UnsortedStrip />
-        </MarqueeArea>
-        <BucketsPanel />
-      </main>
+      {mode === "matrix" ? (
+        <main className={styles.main}>
+          <MarqueeArea className={styles.board}>
+            <div className={styles.matrixArea}>
+              <Matrix />
+              <SelectionBar />
+            </div>
+            <UnsortedStrip />
+          </MarqueeArea>
+          <BucketsPanel />
+        </main>
+      ) : (
+        <main key={mode} className={styles.single}>
+          {mode === "list" ? <ListView /> : <TableView />}
+        </main>
+      )}
       <DragGhost />
       <VersionBadge />
     </div>

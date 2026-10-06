@@ -1,0 +1,97 @@
+.view {
+  height: 100%;
+  overflow-y: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+/* A readable column in the middle. */
+.page {
+  max-width: var(--reading-width);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-7);
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* The list positions are the only numbers in the app. */
+.list {
+  margin: 0;
+  padding-left: var(--space-6);
+  list-style: decimal;
+}
+
+.plain {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  cursor: default;
+}
+
+.item::marker {
+  color: var(--text-muted);
+}
+
+.item:hover {
+  background: var(--surface-hover);
+}
+
+.item[data-selected] {
+  background: var(--surface-active);
+}
+
+/* The row's content as a flex line, inside the list item so the number
+   (the list marker) still shows. */
+.line {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  vertical-align: top;
+}
+
+.dot {
+  flex: none;
+  width: var(--color-dot-size);
+  height: var(--color-dot-size);
+  border-radius: var(--radius-full);
+}
+
+.text {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
+/* The bucket a card came from, as a quiet word on the right. */
+.bucket {
+  flex: none;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.bucket[data-best] {
+  color: var(--accent);
+}
+
+.unsorted {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.heading {
+  margin: 0 0 var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--weight-bold);
+}

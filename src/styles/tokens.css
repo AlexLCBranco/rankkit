@@ -43,6 +43,8 @@
   --duration-instant: 80ms;
   --duration-fast: 140ms;
   --duration-medium: 220ms;
+  /* The view switcher's highlight sliding to another word. */
+  --duration-slide: 400ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -62,6 +64,14 @@
      board menu beside it. */
   --board-name-max-width: 280px;
   --menu-trigger-size: 24px;
+  /* The Matrix / List / Table switcher (Vennkit's): the inset around its
+     words, and the gap between them. */
+  --switcher-pad: 3px;
+  --switcher-gap: 2px;
+  /* How wide the List view's column of text gets. */
+  --reading-width: 640px;
+  /* Letter spacing for small capitals (table headings). */
+  --caps-tracking: 0.05em;
   /* A card being dragged: how opaque it is. */
   --drag-opacity: 0.9;
   /* The marquee box: how strongly the accent tints it. */

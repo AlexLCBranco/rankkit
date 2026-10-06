@@ -1,0 +1,82 @@
+.view {
+  height: 100%;
+  overflow: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.empty {
+  margin: 0;
+  padding: var(--space-5);
+  color: var(--text-muted);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+/* The header row stays put while the rows scroll under it. */
+.table th {
+  position: sticky;
+  top: 0;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-strong);
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--caps-tracking);
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.table td {
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.table tbody tr {
+  cursor: default;
+}
+
+.table tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+.table tbody tr[data-selected] {
+  background: var(--surface-active);
+}
+
+.table .text {
+  width: 100%;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.bucket,
+.place,
+.colour {
+  white-space: nowrap;
+}
+
+.bucket[data-best] {
+  color: var(--accent);
+}
+
+.bucket[data-unsorted],
+.none {
+  color: var(--text-muted);
+}
+
+.dot {
+  display: inline-block;
+  width: var(--color-dot-size);
+  height: var(--color-dot-size);
+  margin-right: var(--space-2);
+  border-radius: var(--radius-full);
+  vertical-align: middle;
+}

@@ -64,6 +64,8 @@
   --menu-trigger-size: 24px;
   /* A card being dragged: how opaque it is. */
   --drag-opacity: 0.9;
+  /* The marquee box: how strongly the accent tints it. */
+  --marquee-tint: 12%;
 
   /* ---- Stacking order ---- */
   --z-card: 1;

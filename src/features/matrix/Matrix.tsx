@@ -4,8 +4,9 @@ import { QUADRANTS } from "../../domain/types";
 import { useBoardStore } from "../../store/boardStore";
 import { useViewStore } from "../../store/viewStore";
 import { BoardLabel } from "./BoardLabel";
-import { registerMatrix } from "./cardDrag";
+import { justDragged, registerMatrix } from "./cardDrag";
 import { CardView } from "./CardView";
+import { startMarquee } from "./marquee";
 import styles from "./Matrix.module.css";
 import { QuadrantMenu } from "./QuadrantMenu";
 
@@ -15,7 +16,8 @@ import { QuadrantMenu } from "./QuadrantMenu";
  * (plain CSS, no canvas library): the page never pans or zooms, so React
  * Flow's camera, edges and handles would all go unused. Every label on it
  * can be renamed with a double-click (`BoardLabel`). Right-clicking a
- * quadrant offers presets that tidy its cards (`QuadrantMenu`).
+ * quadrant offers presets that tidy its cards (`QuadrantMenu`). Dragging
+ * across empty space draws a marquee that picks several cards (`marquee.ts`).
  */
 export function Matrix() {
   const placedIds = useBoardStore(
@@ -33,7 +35,10 @@ export function Matrix() {
       <div
         ref={registerMatrix}
         className={styles.matrix}
-        onClick={() => useViewStore.getState().select(null)}
+        onPointerDown={startMarquee}
+        // A click on empty space lets go of the pick, unless it is just the
+        // tail end of a marquee or a drag.
+        onClick={() => !justDragged() && useViewStore.getState().select(null)}
       >
         {QUADRANTS.map((q) => (
           <QuadrantMenu key={q} q={q}>
@@ -47,10 +52,18 @@ export function Matrix() {
         {placedIds.map((id) => (
           <CardView key={id} id={id} />
         ))}
+        <MarqueeBox />
       </div>
       <div className={styles.xAxis}>
         <BoardLabel labelKey="x" /> →
       </div>
     </div>
   );
+}
+
+/** The tinted box that follows the pointer while a marquee is drawn. */
+function MarqueeBox() {
+  const box = useViewStore((s) => s.marquee);
+  if (!box) return null;
+  return <div className={styles.marquee} style={{ left: box.x, top: box.y, width: box.width, height: box.height }} />;
 }

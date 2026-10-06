@@ -22,7 +22,7 @@ import styles from "./BucketsPanel.module.css";
 export function BucketsPanel() {
   const state = useBoardStore((s) => s.doc.state);
   const { buckets, unsorted } = useMemo(() => bucketsOf(state), [state]);
-  const selectedId = useViewStore((s) => s.selectedId);
+  const selectedIds = useViewStore((s) => s.selectedIds);
   const dragging = useViewStore((s) => s.drag !== null);
   /** Each close call, found by the card ranked first in it. */
   const closeAfter = useMemo(
@@ -47,7 +47,7 @@ export function BucketsPanel() {
                 <li
                   key={card.id}
                   className={styles.item}
-                  data-selected={card.id === selectedId ? "" : undefined}
+                  data-selected={selectedIds.includes(card.id) ? "" : undefined}
                   onPointerEnter={() => hover(card.id)}
                   onPointerLeave={() => hover(null)}
                   onClick={() => select(card.id)}

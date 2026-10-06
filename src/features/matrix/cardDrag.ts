@@ -1,5 +1,6 @@
 import type { PointerEvent as ReactPointerEvent } from "react";
 
+import { moveGroup, toggleInSelection, type GroupMember } from "../../domain/marquee";
 import { clampToBoard } from "../../domain/matrix";
 import type { CardId } from "../../domain/types";
 import { useBoardStore } from "../../store/boardStore";
@@ -36,10 +37,30 @@ const inside = (r: DOMRect, x: number, y: number) =>
 let lastDragEnd = 0;
 export const justDragged = () => performance.now() - lastDragEnd < 100;
 
+/** Marks a press-and-move as finished (see `justDragged`). */
+export const markDragEnd = () => void (lastDragEnd = performance.now());
+
+/** The matrix element, for the marquee and the group drag to measure. */
+export const matrixElement = () => zones.matrix;
+
+/** A placed card's element on the matrix (cards carry `data-card-id`). */
+export const cardElement = (id: CardId) =>
+  zones.matrix?.querySelector<HTMLElement>(`[data-card-id="${CSS.escape(id)}"]`) ?? null;
+
 export function startCardDrag(event: ReactPointerEvent<HTMLElement>, id: CardId) {
   if (event.button !== 0 || useViewStore.getState().editingId === id) return;
   const view = useViewStore.getState();
   const board = useBoardStore.getState();
+  // Shift+click adds the card to the picked group, or takes it out.
+  if (event.shiftKey) {
+    view.selectMany(toggleInSelection(view.selectedIds, id));
+    return;
+  }
+  // Pressing a card of a group moves the whole group (its placed cards).
+  if (view.selectedIds.length > 1 && view.selectedIds.includes(id) && board.doc.state.cards[id]?.pos) {
+    startGroupDrag(event, id);
+    return;
+  }
   view.select(id);
 
   const rect = event.currentTarget.getBoundingClientRect();
@@ -88,7 +109,64 @@ export function startCardDrag(event: ReactPointerEvent<HTMLElement>, id: CardId)
     board.endGesture(cancelled || overNothing);
     view.setDrag(null);
     delete document.documentElement.dataset.dragging;
-    lastDragEnd = performance.now();
+    markDragEnd();
+  };
+  const onUp = () => finish(false);
+  const onCancel = () => finish(true);
+
+  window.addEventListener("pointermove", onMove);
+  window.addEventListener("pointerup", onUp);
+  window.addEventListener("pointercancel", onCancel);
+}
+
+/**
+ * Dragging a group: every picked card on the matrix moves by the pointer's
+ * movement, as one block that stops at the board's edges (`moveGroup`).
+ * No floating copy here; the real cards move, so the shape stays visible.
+ * Cards of the group still in the unsorted strip stay there. A press that
+ * doesn't move picks just that card, as a plain click would. The whole
+ * drag is one undo step; a cancelled pointer puts the cards back.
+ */
+function startGroupDrag(event: ReactPointerEvent<HTMLElement>, id: CardId) {
+  const view = useViewStore.getState();
+  const board = useBoardStore.getState();
+  const matrix = zones.matrix?.getBoundingClientRect();
+  if (!matrix) return;
+  const { cards } = board.doc.state;
+  const members = new Map<CardId, GroupMember>();
+  for (const member of view.selectedIds) {
+    const pos = cards[member]?.pos;
+    const el = cardElement(member);
+    if (!pos || !el) continue;
+    const r = el.getBoundingClientRect();
+    members.set(member, { start: pos, margin: { x: r.width / 2 / matrix.width, y: r.height / 2 / matrix.height } });
+  }
+  const start = { x: event.clientX, y: event.clientY };
+  let dragging = false;
+
+  const onMove = (e: PointerEvent) => {
+    if (!dragging) {
+      if (Math.hypot(e.clientX - start.x, e.clientY - start.y) < DRAG_THRESHOLD) return;
+      dragging = true;
+      board.beginGesture();
+      document.documentElement.dataset.dragging = "";
+    }
+    // Pixels to board units; y counts upwards on the board.
+    const delta = { x: (e.clientX - start.x) / matrix.width, y: -(e.clientY - start.y) / matrix.height };
+    board.moveCards(moveGroup(members, delta));
+  };
+
+  const finish = (cancelled: boolean) => {
+    window.removeEventListener("pointermove", onMove);
+    window.removeEventListener("pointerup", onUp);
+    window.removeEventListener("pointercancel", onCancel);
+    if (!dragging) {
+      if (!cancelled) view.select(id);
+      return;
+    }
+    board.endGesture(cancelled);
+    delete document.documentElement.dataset.dragging;
+    markDragEnd();
   };
   const onUp = () => finish(false);
   const onCancel = () => finish(true);

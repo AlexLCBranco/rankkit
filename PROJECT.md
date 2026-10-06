@@ -1,6 +1,6 @@
 # Rankkit — project summary
 
-_Last updated: 2026-10-05, v0.0.7_
+_Last updated: 2026-10-05, v0.0.8_
 
 ## What it is
 
@@ -19,7 +19,7 @@ dialogs, such as the card menu), CSS Modules with design tokens copied from
 Treekit, lucide icons. Same layering as Treekit:
 `app -> features -> store -> domain`. `domain/` is plain TypeScript with
 Vitest tests. It holds the card operations, quadrants, the ranking and the
-sample board, the "this or that" close calls, the arrange presets, and how a saved board is read back (and repaired). No
+sample board, the "this or that" close calls, the arrange presets, what the marquee picks, and how a saved board is read back (and repaired). No
 backend: boards live in the browser's localStorage.
 
 ## Decisions
@@ -77,6 +77,13 @@ backend: boards live in the browser's localStorage.
   "In a line": cards evenly spaced on the quadrant's diagonal towards the
   best corner (`domain/arrange.ts`). Column, row or grid can join the same
   menu later.
+- **The marquee works like Treekit's and Linkkit's.** A card is picked
+  only when the box holds all of it, so brushing its edge doesn't count
+  (`domain/marquee.ts`). A picked group drags as one block that stops at
+  the board's edge as a whole, so the cards keep their spacing and order
+  among themselves. Cards of the group still in the unsorted strip stay
+  there. The bar's count is in words ("Two cards"), like the panel's. No
+  Ctrl+A: Rankkit keeps the keyboard for typing text.
 
 ## What works now (step 1: the core)
 
@@ -142,6 +149,27 @@ backend: boards live in the browser's localStorage.
   in an empty quadrant. Spreading cards out also clears any close calls
   among them (they keep their current order).
 
+## What works now (step 8: picking several cards)
+
+Asked for by the owner as "the standard marquee feature" of the other
+widgets, so it took the next step number.
+
+- Drag across empty space on the matrix: a tinted box follows the
+  pointer and every card it holds completely is picked as it goes.
+  Shift+drag adds to what is already picked; Shift+click a card adds it
+  or takes it out (in the strip too). Clicking a card or empty space, or
+  Esc, goes back to one / none. Picked cards are highlighted on the
+  matrix and in the buckets panel.
+- Drag any picked card and all the picked cards on the matrix move
+  together; the panel re-ranks live. One undo step.
+- With two or more picked, a bar at the bottom of the matrix says how
+  many (in words) and offers a colour (shows the shared one, or a mixed
+  dot), delete, and × to let go. Right-clicking a picked card opens its
+  menu for the whole group ("Delete three cards"), and the Delete key
+  removes them all. Each is one undo step.
+- `.claude/launch.json` has a second dev server, `rankkit-2` on port
+  5184, for when another chat already runs `rankkit` on 5183.
+
 ## Open problems
 
 - Boards are saved only in this browser; there is no export or sync yet.
@@ -154,7 +182,7 @@ backend: boards live in the browser's localStorage.
 Each line is one step, done in its own chat, in this order. Step numbers
 never change (step 1 was the core), so "step 3" always means the same thing.
 
-No numbered steps are planned right now; the next one gets step 8.
+No numbered steps are planned right now; the next one gets step 9.
 
 Planned later, on purpose not in v1 (the model mustn't block them):
 switching axes between several criteria, a low/medium/high word grid with

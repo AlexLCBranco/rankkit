@@ -39,6 +39,7 @@
 /* A size container: the matrix reads its width and height (cqw / cqh) to
    take the biggest square-ish shape that fits. */
 .matrixArea {
+  position: relative;
   flex: 1;
   min-height: 0;
   display: grid;

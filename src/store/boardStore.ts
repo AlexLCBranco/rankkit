@@ -53,6 +53,12 @@ interface BoardStore {
   /** `null` takes the colour off. */
   setCardColor(id: CardId, color: PaletteColor | null): void;
   deleteCard(id: CardId): void;
+  /** Colours a whole group at once. One undo step. */
+  setCardsColor(ids: readonly CardId[], color: PaletteColor | null): void;
+  /** Deletes a whole group at once. One undo step. */
+  deleteCards(ids: readonly CardId[]): void;
+  /** Moves several cards at once (a group being dragged). */
+  moveCards(moves: ReadonlyMap<CardId, Point>): void;
   /** Answers "this or that": `winner` comes before `loser`, and both
       cards move to show it. One undo step. */
   settle(winner: CardId, loser: CardId): void;
@@ -144,7 +150,7 @@ export const useBoardStore = create<BoardStore>()((set, get) => {
     set({ doc: { ...s.doc, state: result.state }, history: result.history, newCardId: null });
     const { cards } = result.state;
     const view = useViewStore.getState();
-    if (view.selectedId && !cards[view.selectedId]) view.select(null);
+    if (view.selectedIds.some((id) => !cards[id])) view.selectMany(view.selectedIds.filter((id) => cards[id]));
     if (view.editingId && !cards[view.editingId]) view.edit(null);
     if (view.hoveredId && !cards[view.hoveredId]) view.hover(null);
   };
@@ -197,6 +203,13 @@ export const useBoardStore = create<BoardStore>()((set, get) => {
       }
       apply((state) => deleteCard(state, id));
     },
+    setCardsColor: (ids, color) => apply((s) => ids.reduce((st, id) => setCardColor(st, id, color), s)),
+    deleteCards(ids) {
+      // One card goes through `deleteCard`, which knows about new empty ones.
+      if (ids.length === 1) get().deleteCard(ids[0]);
+      else apply((s) => ids.reduce(deleteCard, s));
+    },
+    moveCards: (moves) => apply((s) => [...moves].reduce((st, [id, pos]) => moveCard(st, id, pos), s)),
     settle: (winner, loser) => apply((s) => settle(s, winner, loser)),
     arrangeLine: (q) => apply((s) => arrangeLine(s, q)),
     setLabel: (key, text) => apply((s) => setLabel(s, key, text)),

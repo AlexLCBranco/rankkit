@@ -17,7 +17,7 @@ import styles from "./CardView.module.css";
  */
 export function CardView({ id }: { readonly id: CardId }) {
   const card = useCard(id);
-  const selected = useViewStore((s) => s.selectedId === id);
+  const selected = useViewStore((s) => s.selectedIds.includes(id));
   const editing = useViewStore((s) => s.editingId === id);
   const hovered = useViewStore((s) => s.hoveredId === id);
   const dragging = useViewStore((s) => s.drag?.id === id);
@@ -32,6 +32,7 @@ export function CardView({ id }: { readonly id: CardId }) {
     <CardMenu id={id}>
       <div
         className={styles.card}
+        data-card-id={id}
         data-placed={card.pos ? "" : undefined}
         data-selected={selected ? "" : undefined}
         data-hovered={hovered ? "" : undefined}

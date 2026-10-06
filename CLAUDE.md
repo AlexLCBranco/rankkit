@@ -27,10 +27,19 @@ learning frontend: explain each decision in a sentence or two.
 
 ## Workflow
 
-1. `npm run build`, `npm test` and `npm run lint` must pass.
-2. Check it in the browser pane (dev server `rankkit` in
+The owner starts a fresh chat for each step, saying "Read PROJECT.md and
+CLAUDE.md, then do step N" or "the next step". Each one:
+
+1. Read PROJECT.md (and `git log --oneline | head`) to get oriented. A step
+   is one numbered item of PROJECT.md's "What's next" list; "the next
+   step" is the lowest-numbered one still on it.
+2. Say briefly what you'll build and why, then build only that step. New
+   pure logic goes in `domain/` with tests.
+3. `npm run build`, `npm test` and `npm run lint` must pass.
+4. Check it in the browser pane (dev server `rankkit` in
    `.claude/launch.json`, port 5183).
-3. Update PROJECT.md, bump the version, commit on `main` and push. Every
+5. Update PROJECT.md (move the step from "What's next" to "What works
+   now"), bump the version, commit on `main` and push. Every
    push to `main` deploys to https://rankkit-nine.vercel.app (Vercel
    project `rankkit`, team `alexlcbrancos-projects`; plain rankkit.vercel.app
    belongs to someone else). Check a deploy with

@@ -64,11 +64,14 @@ sample board. No backend.
 
 ## What's next
 
-1. Editable axis labels and quadrant names.
-2. Undo / redo (Ctrl+Z, Ctrl+Shift+Z and buttons).
-3. Card colours (optional, same palette as the other widgets).
-4. Several saved boards with a board menu, saved in localStorage.
-5. "This or that": compare two close cards in the same bucket.
+Each line is one step, done in its own chat, in this order. Step numbers
+never change (step 1 was the core), so "step 3" always means the same thing.
+
+- **Step 2.** Editable axis labels and quadrant names.
+- **Step 3.** Undo / redo (Ctrl+Z, Ctrl+Shift+Z and buttons).
+- **Step 4.** Card colours (optional, same palette as the other widgets).
+- **Step 5.** Several saved boards with a board menu, saved in localStorage.
+- **Step 6.** "This or that": compare two close cards in the same bucket.
 
 Planned later, on purpose not in v1 (the model mustn't block them):
 switching axes between several criteria, a low/medium/high word grid with

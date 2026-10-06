@@ -7,13 +7,15 @@ import { BoardLabel } from "./BoardLabel";
 import { registerMatrix } from "./cardDrag";
 import { CardView } from "./CardView";
 import styles from "./Matrix.module.css";
+import { QuadrantMenu } from "./QuadrantMenu";
 
 /**
  * The 2×2 board: four quadrants, dashed centre lines, the two axis labels
  * and every placed card. Cards are absolutely positioned at their points
  * (plain CSS, no canvas library): the page never pans or zooms, so React
  * Flow's camera, edges and handles would all go unused. Every label on it
- * can be renamed with a double-click (`BoardLabel`).
+ * can be renamed with a double-click (`BoardLabel`). Right-clicking a
+ * quadrant offers presets that tidy its cards (`QuadrantMenu`).
  */
 export function Matrix() {
   const placedIds = useBoardStore(
@@ -34,9 +36,11 @@ export function Matrix() {
         onClick={() => useViewStore.getState().select(null)}
       >
         {QUADRANTS.map((q) => (
-          <div key={q} className={styles.quadrant} data-q={q} data-best={q === best ? "" : undefined}>
-            <BoardLabel labelKey={q} className={styles.quadrantName} />
-          </div>
+          <QuadrantMenu key={q} q={q}>
+            <div className={styles.quadrant} data-q={q} data-best={q === best ? "" : undefined}>
+              <BoardLabel labelKey={q} className={styles.quadrantName} />
+            </div>
+          </QuadrantMenu>
         ))}
         <div className={styles.vLine} />
         <div className={styles.hLine} />

@@ -16,8 +16,8 @@ export const CLOSE_CALL = 0.05;
 const SETTLED_GAP = 0.1;
 /** A settled card keeps this far from the centre lines (so it stays in its
     bucket) and from the board's edges (so the whole card stays visible). */
-const LINE_INSET = 0.03;
-const EDGE_INSET = 0.1;
+export const LINE_INSET = 0.03;
+export const EDGE_INSET = 0.1;
 
 export interface CloseCall {
   readonly quadrant: Quadrant;

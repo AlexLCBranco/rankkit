@@ -1,13 +1,14 @@
 import { create } from "zustand";
 
 import { addCard, deleteCard, emptyBoard, moveCard, setCardColor, setCardText, setLabel } from "../domain/board";
+import { arrangeLine } from "../domain/arrange";
 import { settle } from "../domain/compare";
 import * as history from "../domain/history";
 import { createBoardId, createCardId } from "../domain/ids";
 import { UNTITLED_BOARD } from "../domain/persistence";
 import { removeBoard, upsertBoard, type Registry } from "../domain/registry";
 import { sampleBoard } from "../domain/sample";
-import type { BoardDoc, BoardId, BoardState, CardId, LabelKey, PaletteColor, Point } from "../domain/types";
+import type { BoardDoc, BoardId, BoardState, CardId, LabelKey, PaletteColor, Point, Quadrant } from "../domain/types";
 import {
   deleteStoredBoard,
   loadActiveBoardId,
@@ -55,6 +56,9 @@ interface BoardStore {
   /** Answers "this or that": `winner` comes before `loser`, and both
       cards move to show it. One undo step. */
   settle(winner: CardId, loser: CardId): void;
+  /** Tidies one quadrant's cards into a line, keeping their order. One
+      undo step. */
+  arrangeLine(q: Quadrant): void;
   /** Renames an axis or a quadrant; blank text restores the default. */
   setLabel(key: LabelKey, text: string): void;
   /** Starts a drag: the many moves until `endGesture` make one undo step. */
@@ -194,6 +198,7 @@ export const useBoardStore = create<BoardStore>()((set, get) => {
       apply((state) => deleteCard(state, id));
     },
     settle: (winner, loser) => apply((s) => settle(s, winner, loser)),
+    arrangeLine: (q) => apply((s) => arrangeLine(s, q)),
     setLabel: (key, text) => apply((s) => setLabel(s, key, text)),
     beginGesture: () => set((s) => ({ gestureStart: s.doc.state })),
     endGesture: (cancel = false) =>

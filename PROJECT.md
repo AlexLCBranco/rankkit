@@ -1,6 +1,6 @@
 # Rankkit — project summary
 
-_Last updated: 2026-10-05, v0.0.6_
+_Last updated: 2026-10-05, v0.0.7_
 
 ## What it is
 
@@ -19,7 +19,7 @@ dialogs, such as the card menu), CSS Modules with design tokens copied from
 Treekit, lucide icons. Same layering as Treekit:
 `app -> features -> store -> domain`. `domain/` is plain TypeScript with
 Vitest tests. It holds the card operations, quadrants, the ranking and the
-sample board, the "this or that" close calls, and how a saved board is read back (and repaired). No
+sample board, the "this or that" close calls, the arrange presets, and how a saved board is read back (and repaired). No
 backend: boards live in the browser's localStorage.
 
 ## Decisions
@@ -71,6 +71,12 @@ backend: boards live in the browser's localStorage.
   best corner, the chosen one in and the other out, until they are clearly
   apart, never leaving their quadrant. So the matrix stays the only
   judgment, and undo, saving and dragging need nothing new.
+- **Arrange presets keep the order.** Right-click a quadrant's empty space
+  to tidy its cards. Since where a card sits is its rank, a preset may
+  only reshape the picture, never re-rank. For now there is one preset,
+  "In a line": cards evenly spaced on the quadrant's diagonal towards the
+  best corner (`domain/arrange.ts`). Column, row or grid can join the same
+  menu later.
 
 ## What works now (step 1: the core)
 
@@ -128,10 +134,19 @@ backend: boards live in the browser's localStorage.
   step. The links hide while you drag.
 - The sample week now has one close call (in Schedule) to try it on.
 
+## What works now (step 7: arrange presets)
+
+- Right-click empty space in a quadrant: "Arrange cards → In a line,
+  keeping the order". Its cards line up evenly on the diagonal towards
+  Do now, in the order the panel already shows. One undo step. Greyed out
+  in an empty quadrant. Spreading cards out also clears any close calls
+  among them (they keep their current order).
+
 ## Open problems
 
 - Boards are saved only in this browser; there is no export or sync yet.
-- Cards can overlap on the matrix; nothing pushes them apart.
+- Cards can overlap on the matrix; nothing pushes them apart (an arrange
+  preset tidies one quadrant on request).
 - Narrow screens just stack the panel under the board; not tuned for phones.
 
 ## What's next
@@ -139,7 +154,7 @@ backend: boards live in the browser's localStorage.
 Each line is one step, done in its own chat, in this order. Step numbers
 never change (step 1 was the core), so "step 3" always means the same thing.
 
-No numbered steps are planned right now; the next one gets step 7.
+No numbered steps are planned right now; the next one gets step 8.
 
 Planned later, on purpose not in v1 (the model mustn't block them):
 switching axes between several criteria, a low/medium/high word grid with

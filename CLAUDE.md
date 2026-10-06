@@ -2,7 +2,9 @@
 
 A calm 2×2 priority matrix: one of the owner's standalone widgets (siblings
 of Boardkit, Treekit `../treekit`, Vennkit, Linkkit). Never merge it into
-another app. Match Treekit's stack, structure and feel. The owner is
+another app now; later it becomes one widget inside the "gauntlet" canvas,
+so keep the board embeddable (no assumptions about owning the whole page
+or the URL). Match Treekit's stack, structure and feel. The owner is
 learning frontend: explain each decision in a sentence or two.
 
 ## Rules

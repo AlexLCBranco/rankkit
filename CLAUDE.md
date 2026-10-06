@@ -29,7 +29,10 @@ learning frontend: explain each decision in a sentence or two.
 2. Check it in the browser pane (dev server `rankkit` in
    `.claude/launch.json`, port 5183).
 3. Update PROJECT.md, bump the version, commit on `main` and push. Every
-   push to `main` deploys on Vercel once the repo is imported there.
+   push to `main` deploys to https://rankkit-nine.vercel.app (Vercel
+   project `rankkit`, team `alexlcbrancos-projects`; plain rankkit.vercel.app
+   belongs to someone else). Check a deploy with
+   `npx -y vercel@latest ls rankkit`.
 
 ## Commands
 

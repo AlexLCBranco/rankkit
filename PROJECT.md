@@ -9,7 +9,8 @@ You drag cards onto the matrix, and where a card sits is the judgment. The
 app reads three answers off those positions: the picture, one bucket per
 quadrant, and an ordered list inside each bucket. It's a standalone sibling
 of Boardkit, Treekit, Vennkit and Linkkit. The name is provisional and lives
-only in `package.json` (`displayName`). Repo: github.com/AlexLCBranco/rankkit.
+only in `package.json` (`displayName`). Repo: github.com/AlexLCBranco/rankkit;
+every push to main deploys on Vercel (rankkit-nine.vercel.app).
 
 ## Stack
 

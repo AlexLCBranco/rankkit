@@ -1,6 +1,6 @@
 # Rankkit — project summary
 
-_Last updated: 2026-10-05, v0.0.4_
+_Last updated: 2026-10-05, v0.0.5_
 
 ## What it is
 
@@ -19,7 +19,8 @@ dialogs, such as the card menu), CSS Modules with design tokens copied from
 Treekit, lucide icons. Same layering as Treekit:
 `app -> features -> store -> domain`. `domain/` is plain TypeScript with
 Vitest tests. It holds the card operations, quadrants, the ranking and the
-sample board. No backend.
+sample board, and how a saved board is read back (and repaired). No
+backend: boards live in the browser's localStorage.
 
 ## Decisions
 
@@ -52,6 +53,17 @@ sample board. No backend.
   as Boardkit and Treekit. No number keys for colours (unlike Treekit):
   Rankkit keeps the keyboard for typing text. A colour is only a tag; it
   never changes where a card ranks.
+- **Saving works like Treekit.** Each board is its own localStorage entry
+  (`rankkit:board:<id>`), with a small list of names beside it
+  (`rankkit:registry`), so the menu never has to read every board. Saves
+  happen a moment after each change, and straight away when the tab is
+  hidden or closed. Every saved board carries a version number, and a
+  damaged one is repaired on load (the original is kept aside) instead of
+  crashing the app.
+- **The board menu.** Click the board's name to rename it; the small arrow
+  beside it lists your boards (newest first) with New, Duplicate and
+  Delete. Deleting asks first, because it can't be undone. Each board keeps
+  its own undo history while the tab is open.
 
 ## What works now (step 1: the core)
 
@@ -90,9 +102,18 @@ sample board. No backend.
   panel shows a matching dot beside it. Each colour change is one undo
   step.
 
+## What works now (step 5: saved boards)
+
+- Everything is saved in the browser as you go, and a reload opens the
+  board you had open. The first visit opens the sample board "My week".
+- The header shows the board's name: click it to rename. The arrow beside
+  it opens the board menu: switch to another board, "+ New board" (opens
+  empty, straight into naming it), "Duplicate this board", and "Delete
+  this board…" (asks first; greyed out when it's the only board).
+
 ## Open problems
 
-- Nothing is saved yet: a reload brings the sample board back.
+- Boards are saved only in this browser; there is no export or sync yet.
 - Cards can overlap on the matrix; nothing pushes them apart.
 - Narrow screens just stack the panel under the board; not tuned for phones.
 
@@ -101,7 +122,6 @@ sample board. No backend.
 Each line is one step, done in its own chat, in this order. Step numbers
 never change (step 1 was the core), so "step 3" always means the same thing.
 
-- **Step 5.** Several saved boards with a board menu, saved in localStorage.
 - **Step 6.** "This or that": compare two close cards in the same bucket.
 
 Planned later, on purpose not in v1 (the model mustn't block them):

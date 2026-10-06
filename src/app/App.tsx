@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import { BoardSwitcher } from "../features/boards/BoardSwitcher";
 import { BucketsPanel } from "../features/buckets/BucketsPanel";
 import { HistoryButtons } from "../features/history/HistoryButtons";
 import { DragGhost } from "../features/matrix/CardView";
@@ -15,14 +16,13 @@ import { VersionBadge } from "./VersionBadge";
  * on the left and the buckets panel on the right.
  */
 export function App() {
-  const name = useBoardStore((s) => s.doc.name);
   useBoardKeys();
 
   return (
     <div className={styles.app}>
       <header className={styles.header}>
         <span className={styles.appName}>{__APP_NAME__}</span>
-        <h1 className={styles.boardName}>{name}</h1>
+        <BoardSwitcher />
         <HistoryButtons />
       </header>
       <main className={styles.main}>

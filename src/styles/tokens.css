@@ -58,6 +58,10 @@
   --card-button-size: 20px;
   /* Header icon buttons (undo, redo). */
   --icon-button-size: 30px;
+  /* The board name in the header, and the small arrow that opens the
+     board menu beside it. */
+  --board-name-max-width: 280px;
+  --menu-trigger-size: 24px;
   /* A card being dragged: how opaque it is. */
   --drag-opacity: 0.9;
 

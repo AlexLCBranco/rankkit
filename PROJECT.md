@@ -1,6 +1,6 @@
 # Rankkit — project summary
 
-_Last updated: 2026-10-05, v0.0.2_
+_Last updated: 2026-10-05, v0.0.3_
 
 ## What it is
 
@@ -45,6 +45,9 @@ sample board. No backend.
 - **Renaming labels.** Double-click an axis label or a quadrant name to
   rename it, the same gesture as a card. No settings panel. Clearing a name
   brings the default word back, so a heading is never blank.
+- **Undo stores patches, not copies.** Each change keeps only the parts
+  of the board it replaced (`domain/history.ts`, the same design as
+  Treekit). The history lives for the session only and is never saved.
 
 ## What works now (step 1: the core)
 
@@ -65,6 +68,16 @@ sample board. No backend.
   cancels). The buckets panel follows the new names at once. A soft hover
   background hints that a label can be renamed.
 
+## What works now (step 3: undo / redo)
+
+- Ctrl+Z undoes, Ctrl+Shift+Z (or Ctrl+Y) redoes; on a Mac, Cmd. Two
+  arrow buttons in the header do the same and grey out when there is
+  nothing to undo or redo. While typing in a card, Ctrl+Z is the text
+  field's own undo.
+- One undo step per thing you did: a whole drag is one step (not one per
+  pointer move), adding a card and typing its text is one step, and a new
+  card abandoned empty leaves no step at all.
+
 ## Open problems
 
 - Nothing is saved yet: a reload brings the sample board back.
@@ -76,7 +89,6 @@ sample board. No backend.
 Each line is one step, done in its own chat, in this order. Step numbers
 never change (step 1 was the core), so "step 3" always means the same thing.
 
-- **Step 3.** Undo / redo (Ctrl+Z, Ctrl+Shift+Z and buttons).
 - **Step 4.** Card colours (optional, same palette as the other widgets).
 - **Step 5.** Several saved boards with a board menu, saved in localStorage.
 - **Step 6.** "This or that": compare two close cards in the same bucket.

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
 import { BucketsPanel } from "../features/buckets/BucketsPanel";
+import { HistoryButtons } from "../features/history/HistoryButtons";
 import { DragGhost } from "../features/matrix/CardView";
 import { Matrix } from "../features/matrix/Matrix";
 import { UnsortedStrip } from "../features/matrix/UnsortedStrip";
@@ -15,13 +16,14 @@ import { VersionBadge } from "./VersionBadge";
  */
 export function App() {
   const name = useBoardStore((s) => s.doc.name);
-  useCardKeys();
+  useBoardKeys();
 
   return (
     <div className={styles.app}>
       <header className={styles.header}>
         <span className={styles.appName}>{__APP_NAME__}</span>
         <h1 className={styles.boardName}>{name}</h1>
+        <HistoryButtons />
       </header>
       <main className={styles.main}>
         <div className={styles.board}>
@@ -38,15 +40,35 @@ export function App() {
   );
 }
 
-/** Delete removes the selected card; Esc lets go of it. Typing never reaches here. */
-function useCardKeys() {
+const isTyping = (target: EventTarget | null) =>
+  target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
+
+/**
+ * Ctrl/Cmd+Z undoes, Ctrl/Cmd+Shift+Z (or Ctrl+Y) redoes. Delete removes
+ * the selected card; Esc lets go of it. Typing never reaches here, so a
+ * text field keeps its own undo and Backspace.
+ */
+function useBoardKeys() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const { selectedId, editingId, select } = useViewStore.getState();
-      if (editingId || !selectedId || e.target instanceof HTMLInputElement) return;
+      if (editingId || isTyping(e.target)) return;
+      const board = useBoardStore.getState();
+      if (e.ctrlKey || e.metaKey) {
+        const key = e.key.toLowerCase();
+        if (key === "z" && !e.shiftKey) {
+          e.preventDefault();
+          board.undo();
+        } else if ((key === "z" && e.shiftKey) || key === "y") {
+          e.preventDefault();
+          board.redo();
+        }
+        return;
+      }
+      if (!selectedId) return;
       if (e.key === "Delete" || e.key === "Backspace") {
         e.preventDefault();
-        useBoardStore.getState().deleteCard(selectedId);
+        board.deleteCard(selectedId);
         select(null);
       } else if (e.key === "Escape") {
         select(null);

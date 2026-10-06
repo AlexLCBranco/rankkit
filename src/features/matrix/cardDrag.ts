@@ -14,6 +14,7 @@ import { useViewStore } from "../../store/viewStore";
  * While dragging, a floating copy follows the pointer (`DragGhost`) and
  * the real card is moved in the store on every move, so the buckets panel
  * re-ranks live. Dropping anywhere else puts the card back where it was.
+ * The whole drag is one undo step (`beginGesture` / `endGesture`).
  */
 
 /** Below this many pixels of movement, a press is a click, not a drag. */
@@ -45,7 +46,6 @@ export function startCardDrag(event: ReactPointerEvent<HTMLElement>, id: CardId)
   const start = { x: event.clientX, y: event.clientY };
   // Where in the card it was grabbed, so it doesn't jump to the pointer.
   const grab = { x: event.clientX - rect.left, y: event.clientY - rect.top };
-  const original = board.doc.state.cards[id]?.pos ?? null;
   let dragging = false;
   let overNothing = false;
 
@@ -53,6 +53,7 @@ export function startCardDrag(event: ReactPointerEvent<HTMLElement>, id: CardId)
     if (!dragging) {
       if (Math.hypot(e.clientX - start.x, e.clientY - start.y) < DRAG_THRESHOLD) return;
       dragging = true;
+      board.beginGesture();
       document.documentElement.dataset.dragging = "";
     }
     const left = e.clientX - grab.x;
@@ -84,7 +85,7 @@ export function startCardDrag(event: ReactPointerEvent<HTMLElement>, id: CardId)
     window.removeEventListener("pointerup", onUp);
     window.removeEventListener("pointercancel", onCancel);
     if (!dragging) return;
-    if (cancelled || overNothing) board.moveCard(id, original);
+    board.endGesture(cancelled || overNothing);
     view.setDrag(null);
     delete document.documentElement.dataset.dragging;
     lastDragEnd = performance.now();

@@ -30,7 +30,11 @@ export function quadrantOrder(best: Quadrant): readonly Quadrant[] {
   return [best, flipX(best), flipY(best), flipX(flipY(best))];
 }
 
-const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
+/** How far a point is from the board's best corner: what ranks a card. */
+export function distanceToBest(state: Pick<BoardState, "best">, p: Point): number {
+  const c = cornerOf(state.best);
+  return Math.hypot(p.x - c.x, p.y - c.y);
+}
 
 export interface Bucket {
   readonly quadrant: Quadrant;
@@ -52,7 +56,6 @@ export interface Buckets {
  * flickers between two equal cards.
  */
 export function bucketsOf(state: BoardState): Buckets {
-  const target = cornerOf(state.best);
   const placed = new Map<Quadrant, { card: Card; d: number; i: number }[]>();
   const unsorted: Card[] = [];
   state.order.forEach((id, i) => {
@@ -64,7 +67,7 @@ export function bucketsOf(state: BoardState): Buckets {
     }
     const q = quadrantOf(card.pos);
     const list = placed.get(q) ?? [];
-    list.push({ card, d: distance(card.pos, target), i });
+    list.push({ card, d: distanceToBest(state, card.pos), i });
     placed.set(q, list);
   });
   const buckets = quadrantOrder(state.best).map((quadrant) => ({

@@ -1,6 +1,6 @@
 # Rankkit — project summary
 
-_Last updated: 2026-10-05, v0.0.5_
+_Last updated: 2026-10-05, v0.0.6_
 
 ## What it is
 
@@ -19,7 +19,7 @@ dialogs, such as the card menu), CSS Modules with design tokens copied from
 Treekit, lucide icons. Same layering as Treekit:
 `app -> features -> store -> domain`. `domain/` is plain TypeScript with
 Vitest tests. It holds the card operations, quadrants, the ranking and the
-sample board, and how a saved board is read back (and repaired). No
+sample board, the "this or that" close calls, and how a saved board is read back (and repaired). No
 backend: boards live in the browser's localStorage.
 
 ## Decisions
@@ -64,6 +64,13 @@ backend: boards live in the browser's localStorage.
   beside it lists your boards (newest first) with New, Duplicate and
   Delete. Deleting asks first, because it can't be undone. Each board keeps
   its own undo history while the tab is open.
+- **"This or that" answers with positions.** Two neighbours in a bucket
+  whose distances to the best corner differ by less than a small amount
+  (`CLOSE_CALL` in `domain/compare.ts`) are a close call. Your answer is
+  not stored as a separate fact: both cards slide along their line to the
+  best corner, the chosen one in and the other out, until they are clearly
+  apart, never leaving their quadrant. So the matrix stays the only
+  judgment, and undo, saving and dragging need nothing new.
 
 ## What works now (step 1: the core)
 
@@ -111,6 +118,16 @@ backend: boards live in the browser's localStorage.
   empty, straight into naming it), "Duplicate this board", and "Delete
   this board…" (asks first; greyed out when it's the only board).
 
+## What works now (step 6: this or that)
+
+- Under a card that is almost level with the next one in its bucket, the
+  panel shows a quiet "This or that?" link. Clicking it opens the two
+  cards side by side: click the one that comes first. Both cards move a
+  little on the matrix to show the answer, the list re-orders and the link
+  goes away. "Not sure" (or Esc) changes nothing. Each answer is one undo
+  step. The links hide while you drag.
+- The sample week now has one close call (in Schedule) to try it on.
+
 ## Open problems
 
 - Boards are saved only in this browser; there is no export or sync yet.
@@ -122,7 +139,7 @@ backend: boards live in the browser's localStorage.
 Each line is one step, done in its own chat, in this order. Step numbers
 never change (step 1 was the core), so "step 3" always means the same thing.
 
-- **Step 6.** "This or that": compare two close cards in the same bucket.
+No numbered steps are planned right now; the next one gets step 7.
 
 Planned later, on purpose not in v1 (the model mustn't block them):
 switching axes between several criteria, a low/medium/high word grid with

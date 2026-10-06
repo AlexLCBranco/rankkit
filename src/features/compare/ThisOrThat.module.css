@@ -1,0 +1,54 @@
+/* The two cards, side by side, looking like cards on the board. */
+.choices {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: var(--space-3);
+}
+
+.choice {
+  padding: var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-tight);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
+}
+
+.choice[data-colored] {
+  border-color: var(--card-accent);
+  background: color-mix(in srgb, var(--card-accent) var(--palette-tint), var(--surface-raised));
+}
+
+.choice:hover,
+.choice:focus-visible {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  outline: none;
+}
+
+.or {
+  align-self: center;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.notSure {
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+}
+
+.notSure:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}

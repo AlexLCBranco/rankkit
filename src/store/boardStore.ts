@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import { addCard, deleteCard, emptyBoard, moveCard, setCardColor, setCardText, setLabel } from "../domain/board";
+import { settle } from "../domain/compare";
 import * as history from "../domain/history";
 import { createBoardId, createCardId } from "../domain/ids";
 import { UNTITLED_BOARD } from "../domain/persistence";
@@ -51,6 +52,9 @@ interface BoardStore {
   /** `null` takes the colour off. */
   setCardColor(id: CardId, color: PaletteColor | null): void;
   deleteCard(id: CardId): void;
+  /** Answers "this or that": `winner` comes before `loser`, and both
+      cards move to show it. One undo step. */
+  settle(winner: CardId, loser: CardId): void;
   /** Renames an axis or a quadrant; blank text restores the default. */
   setLabel(key: LabelKey, text: string): void;
   /** Starts a drag: the many moves until `endGesture` make one undo step. */
@@ -189,6 +193,7 @@ export const useBoardStore = create<BoardStore>()((set, get) => {
       }
       apply((state) => deleteCard(state, id));
     },
+    settle: (winner, loser) => apply((s) => settle(s, winner, loser)),
     setLabel: (key, text) => apply((s) => setLabel(s, key, text)),
     beginGesture: () => set((s) => ({ gestureStart: s.doc.state })),
     endGesture: (cancel = false) =>

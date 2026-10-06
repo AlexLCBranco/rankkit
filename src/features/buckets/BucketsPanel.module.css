@@ -80,3 +80,21 @@
   color: var(--text-muted);
   font-size: var(--font-size-sm);
 }
+
+/* "This or that?": a quiet link under a card that is almost level with the
+   next one, sitting between the two rows it asks about. */
+.compare {
+  display: block;
+  margin-top: 2px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+}
+
+.compare:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}

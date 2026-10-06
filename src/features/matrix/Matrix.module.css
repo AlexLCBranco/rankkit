@@ -1,0 +1,94 @@
+/* The matrix plus room for the axis labels: left of it and below it. The
+   frame takes the largest square-ish size that fits its container (a size
+   container, see App.module.css): never taller than the space allows. */
+.frame {
+  display: grid;
+  grid-template-columns: var(--axis-gutter) 1fr;
+  grid-template-rows: 1fr var(--axis-gutter);
+  width: min(100cqw, (100cqh - var(--axis-gutter)) * var(--matrix-aspect) + var(--axis-gutter));
+  height: min(100cqh, (100cqw - var(--axis-gutter)) / var(--matrix-aspect) + var(--axis-gutter));
+}
+
+.matrix {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas:
+    "tl tr"
+    "bl br";
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface-sunken);
+}
+
+.quadrant {
+  display: flex;
+  padding: var(--space-3) var(--space-4);
+}
+
+.quadrant[data-q="tl"] { grid-area: tl; border-top-left-radius: var(--radius-lg); }
+.quadrant[data-q="tr"] { grid-area: tr; justify-content: flex-end; border-top-right-radius: var(--radius-lg); }
+.quadrant[data-q="bl"] { grid-area: bl; align-items: flex-end; border-bottom-left-radius: var(--radius-lg); }
+.quadrant[data-q="br"] { grid-area: br; justify-content: flex-end; align-items: flex-end; border-bottom-right-radius: var(--radius-lg); }
+
+.quadrant[data-best] {
+  background: var(--best-tint);
+}
+
+.quadrantName {
+  height: max-content;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+}
+
+.quadrant[data-best] .quadrantName {
+  color: var(--accent);
+}
+
+.vLine,
+.hLine {
+  position: absolute;
+  pointer-events: none;
+}
+
+.vLine {
+  top: var(--space-2);
+  bottom: var(--space-2);
+  left: 50%;
+  border-left: 1px dashed var(--matrix-line);
+}
+
+.hLine {
+  left: var(--space-2);
+  right: var(--space-2);
+  top: 50%;
+  border-top: 1px dashed var(--matrix-line);
+}
+
+/* Axis labels sit at the "more" end of each axis, like an arrow's head. */
+.yAxis {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.yAxis span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}
+
+.xAxis {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+}

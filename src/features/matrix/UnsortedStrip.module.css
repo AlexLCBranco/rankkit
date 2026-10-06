@@ -1,0 +1,37 @@
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: var(--space-3);
+  min-height: var(--strip-min-height);
+  max-height: calc(var(--strip-min-height) * 2);
+  overflow-y: auto;
+  padding: var(--space-3);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  cursor: copy;
+}
+
+.add {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.add:hover {
+  background: var(--surface-hover);
+  color: var(--text-primary);
+}
+
+/* Not clickable itself, so a click on it falls through to the strip. */
+.hint {
+  align-self: center;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  pointer-events: none;
+}

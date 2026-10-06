@@ -1,0 +1,88 @@
+.card {
+  position: relative;
+  z-index: var(--z-card);
+  max-width: var(--card-max-width);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-sm);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-tight);
+  cursor: grab;
+  /* The pointer drives the drag; never let touch scroll the page instead. */
+  touch-action: none;
+  transition:
+    box-shadow var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+/* On the matrix: the centre sits on the card's point. */
+.card[data-placed] {
+  position: absolute;
+  width: max-content;
+  transform: translate(-50%, -50%);
+}
+
+.card:hover {
+  z-index: var(--z-card-raised);
+  box-shadow: var(--shadow-md);
+}
+
+.card[data-selected] {
+  z-index: var(--z-card-raised);
+  border-color: var(--accent);
+}
+
+.card[data-hovered] {
+  box-shadow: 0 0 0 3px var(--hover-ring), var(--shadow-md);
+}
+
+/* The real card waits invisibly while its floating copy is dragged. */
+.card[data-dragging] {
+  visibility: hidden;
+}
+
+.ghost {
+  position: fixed;
+  z-index: var(--z-drag);
+  max-width: none;
+  border-color: var(--accent);
+  box-shadow: var(--shadow-lifted);
+  opacity: var(--drag-opacity);
+  pointer-events: none;
+}
+
+.ghostText {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.trash {
+  position: absolute;
+  top: calc(var(--card-button-size) / -2);
+  right: calc(var(--card-button-size) / -2);
+  display: grid;
+  place-items: center;
+  width: var(--card-button-size);
+  height: var(--card-button-size);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.card:hover .trash {
+  opacity: 1;
+}
+
+.trash:hover {
+  color: var(--palette-red);
+}
+
+:root[data-dragging] .trash {
+  display: none;
+}

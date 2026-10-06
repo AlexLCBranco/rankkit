@@ -1,0 +1,48 @@
+import { useShallow } from "zustand/react/shallow";
+
+import { QUADRANTS } from "../../domain/types";
+import { useBoardStore } from "../../store/boardStore";
+import { useViewStore } from "../../store/viewStore";
+import { registerMatrix } from "./cardDrag";
+import { CardView } from "./CardView";
+import styles from "./Matrix.module.css";
+
+/**
+ * The 2×2 board: four quadrants, dashed centre lines, the two axis labels
+ * and every placed card. Cards are absolutely positioned at their points
+ * (plain CSS, no canvas library): the page never pans or zooms, so React
+ * Flow's camera, edges and handles would all go unused.
+ */
+export function Matrix() {
+  const placedIds = useBoardStore(
+    useShallow((s) => s.doc.state.order.filter((id) => s.doc.state.cards[id]?.pos)),
+  );
+  const axes = useBoardStore((s) => s.doc.state.axes);
+  const names = useBoardStore((s) => s.doc.state.quadrantNames);
+  const best = useBoardStore((s) => s.doc.state.best);
+
+  return (
+    <div className={styles.frame}>
+      <div className={styles.yAxis}>
+        <span>{axes.y} →</span>
+      </div>
+      <div
+        ref={registerMatrix}
+        className={styles.matrix}
+        onClick={() => useViewStore.getState().select(null)}
+      >
+        {QUADRANTS.map((q) => (
+          <div key={q} className={styles.quadrant} data-q={q} data-best={q === best ? "" : undefined}>
+            <span className={styles.quadrantName}>{names[q]}</span>
+          </div>
+        ))}
+        <div className={styles.vLine} />
+        <div className={styles.hLine} />
+        {placedIds.map((id) => (
+          <CardView key={id} id={id} />
+        ))}
+      </div>
+      <div className={styles.xAxis}>{axes.x} →</div>
+    </div>
+  );
+}

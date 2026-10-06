@@ -1,0 +1,69 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-raised);
+}
+
+.appName {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.boardName {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--weight-bold);
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr var(--panel-width);
+  grid-template-rows: minmax(0, 1fr);
+  gap: var(--space-4);
+  flex: 1;
+  min-height: 0;
+  padding: var(--space-4);
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* A size container: the matrix reads its width and height (cqw / cqh) to
+   take the biggest square-ish shape that fits. */
+.matrixArea {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  container-type: size;
+}
+
+/* Narrow windows: the panel moves under the board and the page scrolls. */
+@media (max-width: 800px) {
+  .app {
+    height: auto;
+  }
+
+  .main {
+    grid-template-columns: 1fr;
+  }
+
+  .matrixArea {
+    flex: none;
+    height: 70vh;
+  }
+}

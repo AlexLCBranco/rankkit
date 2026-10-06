@@ -92,15 +92,3 @@
   font-size: var(--font-size-sm);
   white-space: nowrap;
 }
-
-/* The marquee: a tinted box in the accent colour (Treekit's and
-   Linkkit's). It ignores the mouse, so the drag keeps reading the matrix
-   under it. */
-.marquee {
-  position: absolute;
-  z-index: var(--z-sticky);
-  background: color-mix(in srgb, var(--accent) var(--marquee-tint), transparent);
-  border: 1px solid var(--accent);
-  border-radius: var(--radius-sm);
-  pointer-events: none;
-}

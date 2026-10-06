@@ -21,6 +21,7 @@ export function UnsortedStrip() {
   return (
     <section
       ref={registerStrip}
+      data-strip
       className={styles.strip}
       // Clicking empty space adds a card, unless the click is just the tail
       // end of a drag that dropped a card here.

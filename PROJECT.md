@@ -1,6 +1,6 @@
 # Rankkit — project summary
 
-_Last updated: 2026-10-05, v0.0.8_
+_Last updated: 2026-10-05, v0.0.9_
 
 ## What it is
 
@@ -154,10 +154,12 @@ backend: boards live in the browser's localStorage.
 Asked for by the owner as "the standard marquee feature" of the other
 widgets, so it took the next step number.
 
-- Drag across empty space on the matrix: a tinted box follows the
+- Drag across any empty space in the board column (the matrix, the
+  space around it, or the unsorted strip): a tinted box follows the
   pointer and every card it holds completely is picked as it goes.
   Shift+drag adds to what is already picked; Shift+click a card adds it
-  or takes it out (in the strip too). Clicking a card or empty space, or
+  or takes it out. Strip cards can be boxed too. Clicking a card or empty
+  space (outside the strip, where a click adds a card), or
   Esc, goes back to one / none. Picked cards are highlighted on the
   matrix and in the buckets panel.
 - Drag any picked card and all the picked cards on the matrix move

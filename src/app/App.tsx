@@ -6,6 +6,7 @@ import { HistoryButtons } from "../features/history/HistoryButtons";
 import { DragGhost } from "../features/matrix/CardView";
 import { Matrix } from "../features/matrix/Matrix";
 import { UnsortedStrip } from "../features/matrix/UnsortedStrip";
+import { MarqueeArea } from "../features/selection/MarqueeArea";
 import { SelectionBar } from "../features/selection/SelectionBar";
 import { useBoardStore } from "../store/boardStore";
 import { useViewStore } from "../store/viewStore";
@@ -27,13 +28,13 @@ export function App() {
         <HistoryButtons />
       </header>
       <main className={styles.main}>
-        <div className={styles.board}>
+        <MarqueeArea className={styles.board}>
           <div className={styles.matrixArea}>
             <Matrix />
             <SelectionBar />
           </div>
           <UnsortedStrip />
-        </div>
+        </MarqueeArea>
         <BucketsPanel />
       </main>
       <DragGhost />
